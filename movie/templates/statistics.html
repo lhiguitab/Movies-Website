@@ -1,0 +1,11 @@
+{% extends 'base.html' %} <!-- Extiende de la plantilla base.html -->
+{% block content %} <!-- Define un bloque de contenido -->
+
+<body>
+    <h3>Movies per year chart</h3>
+    <img src="data:image/png;base64,{{graphic_year}}" alt="Movies per year chart">
+    <h3>Movies per genre chart</h3>
+    <img src="data:image/png;base64,{{graphic_genre}}" alt="Movies per genre chart">
+</body>
+
+{% endblock %} <!-- Fin del bloque de contenido -->

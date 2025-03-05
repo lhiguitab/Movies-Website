@@ -1,0 +1,23 @@
+{% extends 'base.html' %} <!-- Extiende de la plantilla base.html -->
+{% block content %} <!-- Define un bloque de contenido -->
+
+<div class="container">
+    {% for news in news %}
+    <div class="card mb-3">
+        <div class="row g-0">
+        <div class="col-md-8">
+            <div class="card-body">
+            <h5 class="card-title">{{news.headline}}</h5>
+            <p class="card-text">{{news.body}}</p>
+            <p class="card-text"><small class="text-muted">{{news.date}}</small></p>
+            </div>
+        </div>
+        </div>
+    </div>
+        <!-- <h2>{{news.headline}}</h2>
+        <h5>{{news.date}}</h5>
+        <p>{{news.body}}</p> -->
+    {% endfor %}
+</div>
+
+{% endblock %} <!-- Fin del bloque de contenido -->
