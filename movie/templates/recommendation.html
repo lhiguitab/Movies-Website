@@ -1,0 +1,34 @@
+{% extends 'base.html' %} <!-- Extiende de la plantilla base.html -->
+{% block content %} <!-- Define un bloque de contenido -->
+
+<form action="">
+    <div class="mb-3"> <!-- Agrega espacio inferior de 3 unidades --> 
+        <label for="recommendMovie" class="form-label"> <!-- Asocia un texto descriptivo con un campo de entrada en un formulario -->
+            Recommend for Movie:
+        </label>
+        <input type="text" class="form-control" name="recommendMovie"/>
+    </div>
+    <button type="submit" class="btn btn-primary">Recommend</button>
+</form>
+  
+  {% if best_movie %}
+  <h2 class="mt-5">Movie Recommended:</h2>
+  <div class="row row-cols-1 row-cols-md-3 g-4 mt-2">
+      <div class="col">
+          <div class="card" style="width: 18rem;">
+              <img src="{{ best_movie.image.url }}" class="card-img-top" alt="Imagen de {{ best_movie.title }}">
+              <div class="card-body">
+                  <h5 class="card-title">{{ best_movie.title }}</h5>
+                  <p class="card-text">{{ best_movie.description }}</p>
+                  <p class="card-text">Genre: {{ best_movie.genre }}</p>
+                  <p class="card-text">Year: {{ best_movie.year }}</p>
+                  {% if best_movie.url %}
+                      <a href="{{ best_movie.url }}" class="btn btn-primary">Movie Link</a>
+                  {% endif %}
+              </div>
+          </div>
+      </div>
+  </div>
+  {% endif %}
+
+{% endblock %} <!-- Fin del bloque de contenido -->

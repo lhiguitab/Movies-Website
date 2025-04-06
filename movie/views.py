@@ -4,7 +4,10 @@ import matplotlib.pyplot as plt
 import matplotlib
 import io
 import urllib, base64
-
+from dotenv import load_dotenv
+import os
+import numpy as np
+from openai import OpenAI
 from .models import Movie
 
 # Create your views here.
@@ -116,3 +119,48 @@ def statistics_view(request):
 
     # Renderizar la plantilla statistics.html con la gráfica
     return render(request, 'statistics.html', {'graphic_year': graphic_year, 'graphic_genre': graphic_genre})
+
+load_dotenv('openAI.env')
+client = OpenAI(api_key=os.environ.get("openai_apikey"))
+
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+def recommend_movie(request):
+    best_movie = None
+    similarity = 0.0
+
+    prompt = request.GET.get("recommendMovie")
+    
+    if prompt:
+        # Obtener embedding
+        try:
+            response = client.embeddings.create(
+                input=[prompt],
+                model="text-embedding-3-small"
+            )
+            prompt_emb = np.array(response.data[0].embedding, dtype=np.float32)
+        except Exception as e:
+            print("Error generando embedding:", e)
+            prompt_emb = None
+
+        # Buscar película más parecida
+        if prompt_emb is not None:
+            max_sim = -1
+            for movie in Movie.objects.all():
+                if movie.emb:
+                    try:
+                        movie_emb = np.frombuffer(movie.emb, dtype=np.float32)
+                        sim = cosine_similarity(prompt_emb, movie_emb)
+
+                        if sim > max_sim:
+                            max_sim = sim
+                            best_movie = movie
+                            similarity = sim
+                    except Exception as e:
+                        print("Error comparando con película:", movie.title, e)
+
+    return render(request, "recommendation.html", {
+        "best_movie": best_movie,
+        "similarity": similarity,
+    })
